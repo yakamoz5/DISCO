@@ -1,0 +1,8 @@
+debiasing_method: null
+
+experiment_dir: baseline_opt_${predictor.encoder_type}_${predictor.optimizer_cfg.name}/lr_start_${predictor.optimizer_cfg.lr}_lr_end_${predictor.optimizer_cfg.lr_end}/seed_${seed}
+
+hydra:
+  sweeper:
+    params:
+      +seed: 42

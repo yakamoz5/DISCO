@@ -1,0 +1,5 @@
+defaults:
+  - paths@_global_: paths
+  - base_test@_global_: yaleB
+  - experiment_test@_global_: cdisco
+  - _self_

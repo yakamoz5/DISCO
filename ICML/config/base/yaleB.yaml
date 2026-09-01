@@ -1,0 +1,54 @@
+data:
+  name: yaleB
+  datamodule:
+    _target_: ICML.data.yaleB.yaleB_dataset.YaleBDataModule
+    data_dir: ${dataset_path}/yaleB/ExtendedYaleB
+    train_csv: ${dataset_path}/yaleB/ExtendedYaleB/_base_splits/train_partitioned_biased.csv
+    val_csv: ${dataset_path}/yaleB/ExtendedYaleB/_base_splits/val_partitioned.csv
+    test_csv: ${dataset_path}/yaleB/ExtendedYaleB/_base_splits/test_partitioned.csv
+    num_workers: 8
+    batch_size: 78
+
+callbacks:
+  learning_rate_monitor:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+    logging_interval: 'epoch'
+
+predictor:
+  encoder_type: resnet_18
+  pred_head: non-linear
+  target: label_cat
+  protected_attributes: [b]
+  resnet_cfg:
+    n_outputs: 3
+  optimizer_cfg:
+    name: radam
+    lr_end: 1e-08
+    weight_decay: 0.01
+
+logger:
+  wandb:
+    _target_: pytorch_lightning.loggers.WandbLogger
+    project: "DISCO YaleB sdisco fixed"
+    name: "${debiasing_method}/${data.name}/${experiment_dir}"
+    offline: False
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+  accelerator: gpu
+  devices: 1
+  max_epochs: 100
+  enable_progress_bar: True
+  detect_anomaly: False
+  log_every_n_steps: 1
+  enable_checkpointing: true
+
+hydra:
+  job:
+    chdir: True
+  sweep:
+    dir: results/${debiasing_method}/${data.name}/
+    subdir: ${experiment_dir}/
+  sweeper:
+    params:
+      +predictor.optimizer_cfg.lr: 0.0001

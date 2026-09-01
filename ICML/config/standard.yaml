@@ -1,0 +1,5 @@
+defaults:
+  - paths@_global_: paths
+  - base@_global_: yaleB
+  - experiment@_global_: resnet
+  - _self_

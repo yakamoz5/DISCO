@@ -1,0 +1,11 @@
+debiasing_method: cdisco
+
+experiment_dir: timing_analysis_opt_${predictor.encoder_type}_method_${predictor.method}_${predictor.optimizer_cfg.name}/lr_start_${predictor.optimizer_cfg.lr}_lr_end_${predictor.optimizer_cfg.lr_end}/bw_${predictor.bw}/cdcor_lambda_${predictor.cdcor_lambda}/seed_${seed}/batch_size_${data.datamodule.batch_size}
+
+hydra:
+  sweeper:
+    params:
+      +seed: 42
+      +predictor.bw: 0.1
+      +predictor.cdcor_lambda: 10.0
+      +predictor.method: sdisco
